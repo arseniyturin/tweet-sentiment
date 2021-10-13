@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <title>Arseny Turin - Data Scientist</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', 'arial';
+      font-size: 14px;
+      color: #333;
+    }
+    #content {
+      width: 100%;
+      margin: 10% auto 0;
+      text-align: center;
+      padding: 50px 0;
+    }
+    #input_text,
+    #input_text:focus {
+      outline: none;
+      width: 400px;
+      padding: 8px 13px;
+      box-sizing: border-box;
+      font-size: 22px;
+      color: #fff;
+      border: 2px #00ffd0 solid;
+      border-radius: 6px;
+      box-shadow: 0px 2px 6px 0px #00b88d;
+      background-image: linear-gradient(1deg, #12a5ff, #be22ff);
+    }
+    #form_wrapper {
+      margin: 0 auto;
+      width: 600px;
+      text-align: center;
+    }
+    #go {
+      cursor: pointer;
+      padding: 8px 13px;
+      box-sizing: border-box;
+      font-size: 22px;
+      color: #fff;
+      border: 2px #00ffd0 solid;
+      border-radius: 6px;
+      box-shadow: 0px 2px 6px 0px #00b88d;
+      background-image: linear-gradient(1deg, #ff02c9, #8839d0);
+    }
+    #go:hover {
+      background-color: #f0b0f0;
+    }
+    #sentiment_emoji {
+      font-size: 40px;
+      text-align: center;
+      padding: 24px;
+      margin: 0 auto;
+    }
+    ::placeholder {color: #fff;opacity:.7;}
+    ::-ms-input-placeholder {color: red;}
+  </style>
+</head>
+<body>
+  <div id="content">
+    <h1>Naive Bayes</h1>
+  <div id="form_wrapper">
+  <input id="input_text" type="text" name="text" value="" placeholder="Type anything here" />
+  <button id="go">Go</button>
+  <div id="sentiment_emoji"></div>
+</div>
+</div>
+</body>
+</html>
+<script>
+
+  function App() {
+    const message = 'hello sean';
+  };
+
+  window.addEventListener('load', App);
+  window.App = App;
+
+
+  const emoji = [0x1F641, 0x1F642];
+  const go = document.getElementById('go');
+  const input_text = document.getElementById('input_text');
+  const sentiment_emoji = document.getElementById('sentiment_emoji');
+
+  input_text.addEventListener('keydown', send_ajax);
+  go.addEventListener('click', send_ajax);
+
+  function ajax(url, data=null, callback=null, method="POST", content="application/json") {
+    const request = new XMLHttpRequest();
+    request.open(method, url, true);
+    request.setRequestHeader("Content-type", content);
+    request.send(data);
+    request.onreadystatechange = () => {
+      if (request.readyState == 4 && request.status == 200) {
+        const response = JSON.parse(request.responseText);
+        callback(response);
+      }
+    }
+  };
+
+  function send_ajax() {
+    if (event.key == 'Enter' || event.key == undefined) {
+      ajax(
+        url='/get_sentiment',
+        data=JSON.stringify({"text": input_text.value}),
+        callback=show_sentiment
+      );
+    }
+  };
+
+  function show_sentiment(index) {
+    sentiment_emoji.innerHTML = String.fromCodePoint(emoji[index]);
+  };
+
+</script>
